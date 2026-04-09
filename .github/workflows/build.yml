@@ -1,0 +1,66 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get short hash
+        id: hash
+        run: echo "short_hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Install Arduino CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          echo "$HOME/.arduino-cli/bin" >> $GITHUB_PATH
+
+      - name: Configure Arduino CLI
+        run: |
+          arduino-cli config init
+          arduino-cli core update-index
+          arduino-cli core install arduino:renesas_uno:unor4nano
+
+      - name: Install libraries
+        run: |
+          arduino-cli lib install "https://github.com/bogde/HX711"
+          arduino-cli lib install ADS1115_WE
+          arduino-cli lib install DFRobot_GP8403
+          arduino-cli lib install ModbusRTUSlave
+
+      - name: Build
+        run: |
+          arduino-cli compile --board arduino:renesas_uno:unor4nano --output-dir ./build .
+
+      - name: Upload Release Asset
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/*.bin
+          tag_name: ${{ github.event.release.tag_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release Draft
+        if: github.event_name == 'release'
+        run: |
+          cd build
+          for f in *.bin; do
+            echo "## $f" >> release_notes.md
+            echo "\`\`\`" >> release_notes.md
+            echo "File: $f" >> release_notes.md
+            echo "Commit: ${{ steps.hash.outputs.short_hash }}" >> release_notes.md
+            echo "\`\`\`" >> release_notes.md
+          done
+          cat release_notes.md
