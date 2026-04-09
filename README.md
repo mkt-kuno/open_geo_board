@@ -13,7 +13,7 @@ License: [GPLv3](./LICENSE)
 ## 使用ライブラリ
 
 | ライブラリ | version | 注釈 |
-|-----------|-----------|
+|-----------|-----------|-----------|
 | HX711 Arduino Library |0.7.5|bogde/HX711 |
 | ADS1115_WE |1.5.7| wollewald/ADS1115_WE |
 | DFRobot_GP8403 |1.0.0| DFRobot/DFRobot_GP8403 |
