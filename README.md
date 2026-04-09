@@ -1,4 +1,4 @@
-# open_geo_board
+# OpenGeoBoard
 
 Arduino Uno/Nano R4 用の AD/DA ボード firmware
 
