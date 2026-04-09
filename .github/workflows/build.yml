@@ -3,12 +3,13 @@ name: Build and Release
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
-  release:
-    types: [published]
+      - master
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -43,24 +44,24 @@ jobs:
         run: |
           arduino-cli compile --board arduino:renesas_uno:unor4nano --output-dir ./build .
 
-      - name: Upload Release Asset
-        if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: build/*.bin
-          tag_name: ${{ github.event.release.tag_name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Release Draft
-        if: github.event_name == 'release'
+      - name: Rename binaries with short hash
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           cd build
           for f in *.bin; do
-            echo "## $f" >> release_notes.md
-            echo "\`\`\`" >> release_notes.md
-            echo "File: $f" >> release_notes.md
-            echo "Commit: ${{ steps.hash.outputs.short_hash }}" >> release_notes.md
-            echo "\`\`\`" >> release_notes.md
+            base="${f%.bin}"
+            mv "$f" "${base}_${{ steps.hash.outputs.short_hash }}.bin"
           done
-          cat release_notes.md
+
+      - name: Create Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.hash.outputs.short_hash }}
+          name: Build ${{ steps.hash.outputs.short_hash }}
+          body: |
+            Automated build from commit `${{ github.sha }}`
+            Short hash: `${{ steps.hash.outputs.short_hash }}`
+          files: build/*.bin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
