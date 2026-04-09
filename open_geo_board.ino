@@ -84,7 +84,7 @@ void loop() {
   for (uint8_t i = 0; i < HX711_NUM; i++) {
     if (hx711[i].is_ready()) {
       long raw = hx711[i].read();
-      inputReg[i] = (int16_t)((raw >> 8) & 0xFFFF);
+      inputReg[i] = (int16_t)(raw >> 8);
     }
   }
 
