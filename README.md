@@ -20,10 +20,10 @@ License: [GPLv3](./LICENSE)
 ## 機能
 
 - **AI (Analog Input)**: 16ch
-  - HX711 x8 (AI0～AI7): ロードセル用
-  - ADS1115 x2 (AI8～AI15): ADC
+  - HX711 x8 (AI0～7): ロードセル入力, PGA128,最大3.5mV/V程度
+  - ADS1115 x2 (AI8～15): 電圧入力,0～6.114V(int16_max)
 - **AO (Analog Output)**: 8ch
-  - GP8403 x4: 0-10V出力
+  - GP8403 x4 (AO0～7): 電圧出力,0～10V
 
 ## ModbusRTU
 
@@ -38,9 +38,6 @@ License: [GPLv3](./LICENSE)
 | 0-15 | Input Register | AI0-AI15 | アナログ入力値 (int16_t) |
 | 0-7 | Holding Register | AO0-AO7 | アナログ出力値 (mV, uint16_t) |
 
-## ビルド
-
-Arduino IDE または PlatformIO でビルド可能
 
 ### Arduino IDE
 
