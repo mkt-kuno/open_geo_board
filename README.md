@@ -1,10 +1,8 @@
 # OpenGeoBoard
 
-Arduino Uno/Nano R4 用の AD/DA ボード firmware
-
-Copyright (c) 2024-2026
-
-License: [GPLv3](./LICENSE)
+Arduino Uno/Nano R4 用の AD/DA ボード firmware  
+Copyright (C) 2026 Makoto KUNO  
+License: [GPLv3](./LICENSE)  
 
 ## 対応ボード
 
