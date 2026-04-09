@@ -6,7 +6,7 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include "HX711.h"
+#include <HX711.h>
 #include <ADS1115_WE.h>
 #include <DFRobot_GP8403.h>
 #include <ModbusRTUSlave.h>
