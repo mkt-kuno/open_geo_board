@@ -37,11 +37,11 @@ DFRobot_GP8403 gp8403[GP8403_NUM] = {
 
 ModbusRTUSlave modbus(Serial);
 
-int16_t  inputReg[HX711_NUM + ADS1115_NUM * 4];
-uint16_t holdReg[GP8403_NUM * 2];
+static int16_t  inputReg[HX711_NUM + ADS1115_NUM * 4];
+static uint16_t holdReg[GP8403_NUM * 2];
 
-uint8_t ads_current_channel = 0;
-uint8_t gp_current_ch = 0;
+static uint8_t ads_current_channel = 0;
+static uint8_t gp_current_ch = 0;
 
 //====================================================================
 // setup()
