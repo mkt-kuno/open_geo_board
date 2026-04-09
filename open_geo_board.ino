@@ -1,3 +1,9 @@
+/*
+ * open_geo_board.ino
+ * Copyright (C) 2026 Makoto KUNO
+ * License: GPLv3
+ */
+
 #include <Arduino.h>
 #include <Wire.h>
 #include "HX711.h"
