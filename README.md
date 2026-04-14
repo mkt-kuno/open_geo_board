@@ -33,10 +33,10 @@ Arduino Uno/Nano R4 用の AD/DA ボード firmware
 
 ### AI (Analog Input): 16ch
 
-| デバイス | チャンネル | 用途 |
-|---------|-----------|------|
-| HX711 x8 | AI0～AI7 | ロードセル用 |
-| ADS1115 x2 | AI8～AI15 | ADC |
+| デバイス | チャンネル | 用途 |　注釈 |
+|---------|-----------|------|------|
+| HX711 x8 | AI0～AI7 | ロードセル用 |10SPS,PGA128,最大3.5mV/V程度|
+| ADS1115 x2 | AI8～AI15 | ADC | 0～6.114V(int16_max)|
 
 ### AO (Analog Output): 8ch
 
