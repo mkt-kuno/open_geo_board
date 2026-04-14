@@ -6,7 +6,7 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include "HX711.h"
+#include <HX711.h>
 #include <ADS1115_WE.h>
 #include <DFRobot_GP8403.h>
 #include <ModbusRTUSlave.h>
@@ -37,11 +37,11 @@ DFRobot_GP8403 gp8403[GP8403_NUM] = {
 
 ModbusRTUSlave modbus(Serial);
 
-int16_t  inputReg[HX711_NUM + ADS1115_NUM * 4];
-uint16_t holdReg[GP8403_NUM * 2];
+static int16_t  inputReg[HX711_NUM + ADS1115_NUM * 4];
+static uint16_t holdReg[GP8403_NUM * 2];
 
-uint8_t ads_current_channel = 0;
-uint8_t gp_current_ch = 0;
+static uint8_t ads_current_channel = 0;
+static uint8_t gp_current_ch = 0;
 
 //====================================================================
 // setup()
@@ -50,9 +50,7 @@ void setup() {
   Wire.begin();
   Wire.setClock(400000);
 
-  for (uint8_t i = 0; i < HX711_NUM; i++) {
-    hx711[i].begin(hx711_dout[i], hx711_sck[i], 128);
-  }
+  for (uint8_t i = 0; i < HX711_NUM; i++) hx711[i].begin(hx711_dout[i], hx711_sck[i], 128);
 
   for (uint8_t i = 0; i < ADS1115_NUM; i++) {
     ads1115[i].init();
@@ -82,10 +80,7 @@ void setup() {
 void loop() {
   // 1. HX711 Task: 全ICのready確認、readyならread
   for (uint8_t i = 0; i < HX711_NUM; i++) {
-    if (hx711[i].is_ready()) {
-      long raw = hx711[i].read();
-      inputReg[i] = (int16_t)((raw >> 8) & 0xFFFF);
-    }
+    if (hx711[i].is_ready()) inputReg[i] = (int16_t)(hx711[i].read() >> 8);
   }
 
   // 2. ADS1115 Task: IC0のreadyを待って両ICを読み込み、次のchへ変換開始
@@ -93,9 +88,7 @@ void loop() {
     inputReg[HX711_NUM + ads_current_channel] = ads1115[0].getRawResult();
     inputReg[HX711_NUM + 4 + ads_current_channel] = ads1115[1].getRawResult();
 
-    if (++ads_current_channel >= 4) {
-      ads_current_channel = 0;
-    }
+    if (++ads_current_channel >= 4) ads_current_channel = 0;
 
     if (ads_current_channel == 0) {
       ads1115[0].setCompareChannels(ADS1115_COMP_0_GND);
@@ -120,12 +113,7 @@ void loop() {
 
   // 4. GP8403 Task: 1 loopで1chだけ更新
   {
-    uint8_t ic = gp_current_ch / 2;
-    uint8_t ch = gp_current_ch % 2;
-    gp8403[ic].setDACOutVoltage(holdReg[gp_current_ch], ch);
-
-    if (++gp_current_ch >= GP8403_NUM * 2) {
-      gp_current_ch = 0;
-    }
+    gp8403[(uint8_t)(gp_current_ch / 2)].setDACOutVoltage(holdReg[gp_current_ch], (uint8_t)(gp_current_ch % 2));
+    if (++gp_current_ch >= GP8403_NUM * 2) gp_current_ch = 0;
   }
 }
