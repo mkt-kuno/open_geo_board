@@ -1,4 +1,4 @@
-# OpenGeoBoard
+# ModbusSimpleFirmware
 
 Arduino Uno/Nano R4 用の AD/DA ボード firmware
 
