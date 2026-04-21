@@ -60,7 +60,7 @@ jobs:
           if [ ! -f "./build/ArduinoNano.bin" ] && [ -f "./build/ArduinoNano.elf" ]; then
             AVR_OBJCOPY="$(command -v avr-objcopy || true)"
             if [ -z "$AVR_OBJCOPY" ]; then
-              AVR_OBJCOPY="$(find "$HOME/.arduino15/packages/arduino/tools/avr-gcc" -maxdepth 6 -type f -name avr-objcopy | sort -V | tail -n 1 || true)"
+              AVR_OBJCOPY="$(find "$HOME/.arduino15/packages/arduino/tools/avr-gcc" -maxdepth 8 -type f -name avr-objcopy 2>/dev/null | sort -V | tail -n 1 || true)"
             fi
             if [ -n "$AVR_OBJCOPY" ]; then
               "$AVR_OBJCOPY" -O binary "./build/ArduinoNano.elf" "./build/ArduinoNano.bin"
