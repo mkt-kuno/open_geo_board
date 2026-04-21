@@ -53,6 +53,6 @@ jobs:
           if ! gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
             gh release create "$RELEASE_TAG" \
               --title "Firmware Build $RELEASE_TAG" \
-              --notes "Automated firmware build for $GITHUB_SHA"
+              --notes "Automated firmware build for $RELEASE_TAG"
           fi
           gh release upload "$RELEASE_TAG" "${artifacts[@]}" --clobber
