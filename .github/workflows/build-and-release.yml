@@ -33,11 +33,14 @@ jobs:
         id: vars
         run: echo "tag=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Create GitHub Release and upload binaries
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.vars.outputs.tag }}
-          name: Firmware Build ${{ steps.vars.outputs.tag }}
-          files: |
-            build/*.bin
-            build/*.hex
+      - name: Create or update GitHub Release and upload binaries
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.vars.outputs.tag }}
+        run: |
+          if ! gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" \
+              --title "Firmware Build $RELEASE_TAG" \
+              --notes "Automated firmware build for $GITHUB_SHA"
+          fi
+          gh release upload "$RELEASE_TAG" build/* --clobber
