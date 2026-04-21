@@ -27,7 +27,7 @@ jobs:
           arduino-cli core install arduino:avr
           arduino-cli lib install "HX711" "ADS1115_WE" "DFRobot_GP8403" "ModbusRTUSlave"
 
-      - name: Compile firmware (Arduino Nano R4 / Arduino Nano)
+      - name: Compile firmware (Arduino Nano R4 and Arduino Nano)
         run: |
           set -euo pipefail
 
@@ -44,6 +44,8 @@ jobs:
             src="$(find "$src_dir" -type f -name "$pattern" | head -n 1 || true)"
             if [ -n "$src" ]; then
               cp "$src" "$dst"
+            else
+              echo "No match found for pattern '$pattern' in '$src_dir'"
             fi
           }
 
@@ -56,14 +58,20 @@ jobs:
           copy_first_match "./build/ArduinoNano" "*.hex" "./build/ArduinoNano.hex"
 
           if [ ! -f "./build/ArduinoNano.bin" ] && [ -f "./build/ArduinoNano.elf" ]; then
-            AVR_OBJCOPY="$(find "$HOME/.arduino15/packages/arduino/tools/avr-gcc" -type f -name avr-objcopy | sort -V | tail -n 1 || true)"
+            AVR_OBJCOPY="$(command -v avr-objcopy || true)"
+            if [ -z "$AVR_OBJCOPY" ]; then
+              AVR_OBJCOPY="$(find "$HOME/.arduino15/packages/arduino/tools/avr-gcc" -maxdepth 6 -type f -name avr-objcopy | sort -V | tail -n 1 || true)"
+            fi
             if [ -n "$AVR_OBJCOPY" ]; then
               "$AVR_OBJCOPY" -O binary "./build/ArduinoNano.elf" "./build/ArduinoNano.bin"
             fi
           fi
 
           if [ ! -f "./build/ArduinoNanoR4.bin" ] && [ -f "./build/ArduinoNanoR4.elf" ]; then
-            ARM_OBJCOPY="$(find "$HOME/.arduino15/packages" -type f -name arm-none-eabi-objcopy | sort -V | tail -n 1 || true)"
+            ARM_OBJCOPY="$(command -v arm-none-eabi-objcopy || true)"
+            if [ -z "$ARM_OBJCOPY" ]; then
+              ARM_OBJCOPY="$(find "$HOME/.arduino15/packages/arduino" "$HOME/.arduino15/packages/renesas" -maxdepth 8 -type f -name arm-none-eabi-objcopy 2>/dev/null | sort -V | tail -n 1 || true)"
+            fi
             if [ -n "$ARM_OBJCOPY" ]; then
               "$ARM_OBJCOPY" -O binary "./build/ArduinoNanoR4.elf" "./build/ArduinoNanoR4.bin"
             fi
