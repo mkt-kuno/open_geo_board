@@ -1,0 +1,24 @@
+# Arduino build output
+build/
+*.o
+*.a
+*.hex
+*.bin
+*.eep
+*.core
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Package manager (empty placeholder)
+package.json
+package-lock.json
+
+# Misc
+*.log
