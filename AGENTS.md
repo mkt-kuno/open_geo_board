@@ -47,7 +47,7 @@ Manual testing via Modbus client or hardware verification.
 
 ### File Organization
 
-- Single main sketch file: `open_geo_board.ino`
+- Single main sketch file: `modbus_simple_firmware.ino`
 - For larger projects, organize into `.h` files in same directory
 - Keep related functionality together (sensors, DACs, etc.)
 

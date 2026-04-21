@@ -1,5 +1,5 @@
 /*
- * open_geo_board.ino
+ * modbus_simple_firmware.ino
  * Copyright (C) 2026 Makoto KUNO
  * License: GPLv3
  */
