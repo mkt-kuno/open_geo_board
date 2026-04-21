@@ -4,18 +4,6 @@ Arduino Uno/Nano R4 用の AD/DA ボード firmware
 
 **⚠️ このプロジェクトは WIP (作業中) です。**
 
-## 開発の背景
-
-[DigitShowBasic](https://geo.iis.u-tokyo.ac.jp/archives/7629) は、元は国立研究開発法人土木研究所で作成された **DigitShow** をベースに、Windows 2000 時代に東京大学本郷地盤研の本田剛さんが作成した地盤振動解析ソフトウェアです。もともとはコンソールで BASIC を叩くシンプルな構成で、Arduino に毛が生えたようなスペックだったそうです。
-
-東京大学式の制御システムは、CONTEC および Interface 社の AD/DA ボードを用いて多様な試験機をモーター制御するのが基本となっており、電圧でコントロールするだけであれば非常に汎用的な作りになっています。
-
-2025年12月に GitHub で [mkt-kuno/DigitShowBasic](https://github.com/mkt-kuno/DigitShowBasic) としてオープンソース公開しました。しかし、CONTEC/Interface 社のボードに依存しているため、資産活用や新しいハードウェアの選定が困難という課題がありました。
-
-[DigitShowModbusM](https://github.com/mkt-kuno/DigitShowBasicM) は、この CONTEC/Interface 依存を解消する目的で開発されており、ModbusRTU 対応の AD/DA ボードであれば何でも利用可能になります。
-
-本 firmware は、DigitShowModbusM 専用のハードウェア (Arduino Uno/Nano R4) として作成されました。
-
 ## 対応ボード
 
 - Arduino Uno/Nano R4
